@@ -1,0 +1,59 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: student_management_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_secure_password}
+      MYSQL_DATABASE: ${DB_NAME:-student_db}
+      MYSQL_USER: ${DB_USER:-student_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-student_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    expose:
+      - "3306"
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - student_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: student_management_web
+    restart: always
+    environment:
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_APP: run.py
+      SECRET_KEY: ${SECRET_KEY:-student-management-secret-key-12345}
+      PORT: 5000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-student_db}
+      DB_USER: ${DB_USER:-student_user}
+      DB_PASSWORD: ${DB_PASSWORD:-student_password}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - student_network
+
+volumes:
+  mysql_data:
+    name: student_management_mysql_data
+
+networks:
+  student_network:
+    name: student_management_network
+    driver: bridge
+

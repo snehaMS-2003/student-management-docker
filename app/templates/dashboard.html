@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Student Management System{% endblock %}
+{% block page_heading %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Stat Card: Total Students -->
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="card stat-card border-0 bg-white shadow-sm p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.8rem;">Total Students</h6>
+                    <h2 class="fw-bold mb-0 text-primary" id="stat-total-students">--</h2>
+                    <small class="text-muted">Enrolled & Active</small>
+                </div>
+                <div class="stat-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat Card: Total Departments -->
+    <div class="col-12 col-md-6 col-xl-4">
+        <div class="card stat-card border-0 bg-white shadow-sm p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.8rem;">Departments</h6>
+                    <h2 class="fw-bold mb-0 text-success" id="stat-total-departments">--</h2>
+                    <small class="text-muted">Academic branches</small>
+                </div>
+                <div class="stat-icon bg-success-subtle text-success">
+                    <i class="bi bi-building"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Card -->
+    <div class="col-12 col-md-12 col-xl-4">
+        <div class="card stat-card border-0 bg-white shadow-sm p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.8rem;">Quick Actions</h6>
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="{{ url_for('routes.student_add_page') }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-person-plus-fill me-1"></i> New Student
+                        </a>
+                        <a href="{{ url_for('routes.students_page') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-table me-1"></i> View All
+                        </a>
+                    </div>
+                </div>
+                <div class="stat-icon bg-info-subtle text-info">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recently Added Students Table Section -->
+<div class="card border-0 shadow-sm bg-white">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-title fw-bold mb-0 text-dark">Recently Added Students</h5>
+            <small class="text-muted">The latest registered students in the system</small>
+        </div>
+        <a href="{{ url_for('routes.students_page') }}" class="btn btn-sm btn-outline-primary">
+            View All Records <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Gender</th>
+                        <th>Registered Date</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-students-body">
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                            Loading recent records...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboard();
+    });
+</script>
+{% endblock %}
+
